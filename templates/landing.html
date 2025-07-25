@@ -1,0 +1,59 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row align-items-center my-5 py-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold mb-4">Our platform provides curated data products across multiple industries.</h1>
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+                <a href="/login" class="btn btn-primary btn-lg px-4 gap-3">Get Started</a>
+                <a href="#features" class="btn btn-outline-secondary btn-lg px-4">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="row my-5 py-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-5 fw-bold">Key Features</h2>
+            <p class="lead">Discover what makes our data platform exceptional</p>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="feature-icon bg-primary bg-gradient mb-3">
+                        <i class="bi bi-database text-white fs-2"></i>
+                    </div>
+                    <h3 class="card-title">Curated Data Products</h3>
+                    <p class="card-text">Access high-quality datasets that have been cleaned, normalized, and ready for analysis.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="feature-icon bg-primary bg-gradient mb-3">
+                        <i class="bi bi-plug text-white fs-2"></i>
+                    </div>
+                    <h3 class="card-title">Powerful APIs</h3>
+                    <p class="card-text">Integrate our data directly into your applications with our easy-to-use REST APIs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="row my-5 py-5 bg-light rounded-3">
+        <div class="col-lg-8 mx-auto text-center p-4">
+            <h2 class="display-6 fw-bold mb-4">Ready to get started?</h2>
+            <p class="lead mb-4">Join thousands of businesses leveraging our data platform today.</p>
+            <a href="/login" class="btn btn-primary btn-lg px-4">Sign Up Now</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

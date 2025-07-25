@@ -1,0 +1,203 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Welcome to Your Dashboard</h2>
+    <div>
+        <span class="badge bg-primary">API Key: {{ api_key }}</span>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_activity %}
+                    <ul class="list-group list-group-flush">
+                        {% for activity in recent_activity %}
+                            <li class="list-group-item">
+                                <small class="text-muted">{{ activity[1] }}</small><br>
+                                Accessed {{ activity[0] }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">No recent activity</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="/api/docs" class="btn btn-outline-primary mb-2 d-block">API Documentation</a>
+                <button class="btn btn-outline-secondary mb-2 d-block" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                    Submit Feedback
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">Available Data Products</h3>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ product[1] }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ product[3] }}</h6>
+                <p class="card-text">{{ product[2] }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="status-badge status-{{ product[4] }}">
+                        {% if product[4] == 'not_requested' %}Not Requested
+                        {% elif product[4] == 'pending' %}Pending Approval
+                        {% elif product[4] == 'approved' %}Access Granted
+                        {% else %}Access Denied{% endif %}
+                    </span>
+                    {% if product[4] == 'not_requested' or product[4] == 'rejected' %}
+                        <form method="POST" action="/request_access/{{ product[0] }}">
+                            <button type="submit" class="btn btn-sm btn-primary">Request Access</button>
+                        </form>
+                    {% elif product[4] == 'approved' %}
+                        <div class="btn-group">
+                            <a href="/api/docs#{{ product[1]|lower|replace(' ', '-') }}" class="btn btn-sm btn-success">Use API</a>
+                            <a href="/download_dataset/{{ product[0] }}" class="btn btn-sm btn-info">Download</a>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if product[4] == 'approved' %}
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#rateModal{{ product[0] }}">
+                        Rate Dataset
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Modal for each product -->
+    <div class="modal fade" id="rateModal{{ product[0] }}" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Rate {{ product[1] }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="/submit_rating">
+                    <input type="hidden" name="product_id" value="{{ product[0] }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Data Quality</label>
+                            <select name="data_quality" class="form-select" required>
+                                <option value="">Select rating</option>
+                                <option value="5">Excellent</option>
+                                <option value="4">Good</option>
+                                <option value="3">Average</option>
+                                <option value="2">Poor</option>
+                                <option value="1">Very Poor</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Data Completeness</label>
+                            <select name="data_completeness" class="form-select" required>
+                                <option value="">Select rating</option>
+                                <option value="5">Excellent</option>
+                                <option value="4">Good</option>
+                                <option value="3">Average</option>
+                                <option value="2">Poor</option>
+                                <option value="1">Very Poor</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ease of Use</label>
+                            <select name="ease_of_use" class="form-select" required>
+                                <option value="">Select rating</option>
+                                <option value="5">Excellent</option>
+                                <option value="4">Good</option>
+                                <option value="3">Average</option>
+                                <option value="2">Poor</option>
+                                <option value="1">Very Poor</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Overall Rating</label>
+                            <div class="d-flex">
+                                {% for i in range(1, 6) %}
+                                    <div class="form-check me-2">
+                                        <input class="form-check-input" type="radio" name="overall_rating" id="overall{{ product[0] }}{{ i }}" value="{{ i }}" required>
+                                        <label class="form-check-label" for="overall{{ product[0] }}{{ i }}">{{ i }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Additional Comments</label>
+                            <textarea name="comments" class="form-control" rows="3" placeholder="Any specific feedback or suggestions"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal fade" id="feedbackModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Feedback or Request Help</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/submit_feedback">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Feedback Type</label>
+                        <select name="feedback_type" class="form-select" required>
+                            <option value="">-- Select --</option>
+                            <option value="feedback">General Feedback</option>
+                            <option value="question">Question</option>
+                            <option value="help">Help Request</option>
+                            <option value="bug">Bug Report</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Product (if applicable)</label>
+                        <select name="product_id" class="form-select">
+                            <option value="">-- Not product specific --</option>
+                            {% for product in products %}
+                                {% if product[4] == 'approved' %}
+                                    <option value="{{ product[0] }}">{{ product[1] }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" class="form-control" rows="5" required placeholder="Please provide detailed feedback, question, or help request"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

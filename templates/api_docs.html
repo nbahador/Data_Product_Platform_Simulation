@@ -1,0 +1,109 @@
+﻿{% extends "base.html" %}
+
+{% block title %}API Documentation{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">API Documentation</h2>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Authentication</h5>
+    </div>
+    <div class="card-body">
+        <p>All API requests require authentication using your API key:</p>
+        <div class="alert alert-secondary">
+            <code>Authorization: Bearer {{ api_key }}</code>
+        </div>
+        <p>Or as a query parameter:</p>
+        <div class="alert alert-secondary">
+            <code>?api_key={{ api_key }}</code>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4" id="consumer-behavior">
+    <div class="card-header">
+        <h5 class="mb-0">Consumer Behavior Dataset</h5>
+    </div>
+    <div class="card-body">
+        <p>Detailed consumer purchase patterns across regions</p>
+        <h6>Endpoint:</h6>
+        <div class="alert alert-secondary mb-3">
+            <code>GET /api/v1/consumer-behavior</code>
+        </div>
+        <h6>Example Request:</h6>
+        <div class="alert alert-secondary mb-3">
+            <code>curl -H "Authorization: Bearer {{ api_key }}" https://yourdomain.com/api/v1/consumer-behavior</code>
+        </div>
+        <h6>Example Response:</h6>
+        <pre class="bg-light p-3 rounded">{
+    "product": "Consumer Behavior Dataset",
+    "endpoint": "consumer-behavior",
+    "data": [
+        {
+            "customer_id": "a1b2c3d4",
+            "age": 35,
+            "income_bracket": "medium",
+            "purchase_category": "electronics",
+            "purchase_amount": 299.99,
+            "region": "California",
+            "date": "2023-05-15"
+        },
+        ...
+    ]
+}</pre>
+    </div>
+</div>
+
+<div class="card mb-4" id="financial-trends">
+    <div class="card-header">
+        <h5 class="mb-0">Financial Market Trends</h5>
+    </div>
+    <div class="card-body">
+        <p>Daily stock market indicators and trends</p>
+        <h6>Endpoint:</h6>
+        <div class="alert alert-secondary mb-3">
+            <code>GET /api/v1/financial-trends</code>
+        </div>
+        <h6>Parameters:</h6>
+        <ul>
+            <li><code>symbol</code> - Stock symbol (optional)</li>
+            <li><code>start_date</code>, <code>end_date</code> - Date range (optional)</li>
+        </ul>
+        <h6>Example Response:</h6>
+        <pre class="bg-light p-3 rounded">{
+    "product": "Financial Market Trends",
+    "endpoint": "financial-trends",
+    "data": [
+        {
+            "date": "2023-05-15",
+            "symbol": "AAPL",
+            "open_price": 145.67,
+            "close_price": 147.89,
+            "volume": 4567890,
+            "market_cap": 2500000000
+        },
+        ...
+    ]
+}</pre>
+    </div>
+</div>
+
+<div class="card mb-4" id="weather">
+    <div class="card-header">
+        <h5 class="mb-0">Weather History API</h5>
+    </div>
+    <div class="card-body">
+        <p>Historical weather data for global locations</p>
+        <h6>Endpoint:</h6>
+        <div class="alert alert-secondary mb-3">
+            <code>GET /api/v1/weather</code>
+        </div>
+        <h6>Parameters:</h6>
+        <ul>
+            <li><code>location</code> - City name (optional)</li>
+            <li><code>start_date</code>, <code>end_date</code> - Date range (optional)</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Case Studies{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Case Studies</h2>
+<p class="lead mb-5">See how organizations are leveraging our data products to drive business results.</p>
+
+<div class="row">
+    {% for study in case_studies %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h4 class="card-title">{{ study.title }}</h4>
+                <h6 class="card-subtitle mb-3 text-muted">{{ study.company }} ({{ study.industry }})</h6>
+                
+                <h6 class="mt-4">Challenge</h6>
+                <p>{{ study.challenge }}</p>
+                
+                <h6>Solution</h6>
+                <p>{{ study.solution }}</p>
+                
+                <h6>Results</h6>
+                <p>{{ study.results }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card mt-4">
+    <div class="card-body text-center">
+        <h4 class="card-title">Ready to see what our data can do for you?</h4>
+        <p class="card-text">Get started today with a free trial or request a demo.</p>
+        <a href="/dashboard" class="btn btn-primary btn-lg">Request Access</a>
+    </div>
+</div>
+{% endblock %}
